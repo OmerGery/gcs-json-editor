@@ -32,6 +32,7 @@ io.on('connection', (socket) => {
 });
   
    socket.on('get json', async(socketId, {keyData, gcpProject, bucketName, filePath}) => {
+     let messageToClient;
      try {
        console.log('try get json');
         await fs.writeFile(KEY_FILE_NAME, keyData);
@@ -40,9 +41,13 @@ io.on('connection', (socket) => {
           bucketName,
           gcpProjectId : gcpProject,
         });
-        io.to(socketId).emit('json from server', JSON.stringify(settingsToUpdate,null,2));
+        messageToClient = JSON.stringify(settingsToUpdate,null,2);
+        
       } catch (e){
-        console.log(e);
+        messageToClient = `Error getting json from gcs: \n ${e.toString()}`;
+      }
+      finally {
+        io.to(socketId).emit('json from server', messageToClient);
       }
    });
 

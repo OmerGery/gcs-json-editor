@@ -27,7 +27,7 @@ const getBucket = ({gcpProjectId, bucketName}) => {
     bucketName,
 
   }) => {
-    return new Promise((resolve) => {
+    return new Promise((resolve,reject) => {
       try {
       const bucket = getBucket({gcpProjectId, bucketName});
       const fileStream = bucket.file(fileName).createReadStream();
@@ -40,6 +40,7 @@ const getBucket = ({gcpProjectId, bucketName}) => {
       })
       .on('error', (e) => {
           console.error(e);
+          reject(e);
         });
     } catch (e) {
       console.error(e);
