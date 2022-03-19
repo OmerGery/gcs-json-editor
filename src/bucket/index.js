@@ -28,19 +28,28 @@ const getBucket = ({gcpProjectId, bucketName}) => {
 
   }) => {
     return new Promise((resolve) => {
+      try {
       const bucket = getBucket({gcpProjectId, bucketName});
       const fileStream = bucket.file(fileName).createReadStream();
       let jsonBuffer = '';
       fileStream.on('data', (data) => {
         jsonBuffer += data;
-      }).on('end', () => {
+      })
+      .on('end', () => {
         resolve(JSON.parse(jsonBuffer));
-      });
-    });
-  }
+      })
+      .on('error', (e) => {
+          console.error(e);
+        });
+    } catch (e) {
+      console.error(e);
+    }
+  })};      
+    
+    
 
   module.exports = {
     gcsGetFile,
     gcsSaveFile,
     KEY_FILE_NAME
-  }
+  };
