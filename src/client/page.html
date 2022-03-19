@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <style>
+      #messageButton {
+    margin: auto;
+    width: 50%;
+    border: 3px solid green;
+    padding: 10px;
+    color:black
+}
+#messageText{
+    height: 900;
+    width: 500;
+    color:black
+}
+title {
+    display:-moz-grid-line;
+  }
+    </style>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Gcs Json Editor</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      const handleMsg = (msg) => {
+        document.getElementById('jsonText').value=msg;
+      }
+      
+      const socket = io();
+      socket.on('json from server',(msg) => handleMsg(msg));
+      socket.on('update json from server',(msg) => alert(`server says : ${msg}`));
+    </script>
+
+    <script>
+      const handleUpdateJson = () => {
+        const projectName = document.getElementById('projectName').value;
+        const bucketName = document.getElementById('bucketName').value;
+        const filePath = document.getElementById('filePath').value;
+        const jsonKey = document.getElementById('jsonKey').value;
+        const content = document.getElementById('jsonText').value;
+        socket.emit('update json' , socket.id, 
+            {
+              gcpProject : projectName,
+              keyData: jsonKey,
+              bucketName,
+              content, 
+              filePath});
+            };
+      const handleSendMessage = () => {
+        const projectName = document.getElementById('projectName').value;
+        const bucketName = document.getElementById('bucketName').value;
+        const filePath = document.getElementById('filePath').value;
+        const jsonKey = document.getElementById('jsonKey').value;
+        if(projectName && bucketName) {
+          socket.emit('get json' , socket.id, 
+            {
+              gcpProject : projectName,
+              keyData: jsonKey,
+              bucketName, 
+              filePath});
+          }
+      }
+      const getJson = () => handleSendMessage();
+    </script>
+
+
+    </script>
+    <body>
+      <div>
+        <label for="genericLabel">Project name: </label>
+        <input size="20" type="text" id="projectName" placeholder="JSON..." value="zipcar-integ">
+          <label for="genericLabel">Bucket name: </label>
+          <input size="20" type="text" id="bucketName" placeholder="JSON..." value="zipcar-settings">
+          <label for="genericLabel">File path: </label>
+          <input size="20" type="text" id="filePath" placeholder="JSON..." value="debug.json">
+          <br>
+          
+          <input onclick="getJson()" type="submit" value="Get Json">
+          <input style="margin-left: 100px;" onclick="handleUpdateJson()" type="submit" value="Update Json">
+        <br>
+        <label for="genericLabel">JSON value: </label>
+        <br>
+        <textarea id="jsonText" style="width: 1200px; height: 600px; font-family: monospace;" autocomplete="off" id="edit" name="edit" class=" x-form-textarea x-form-field x-form-empty-field"></textarea>
+        <br>
+        <label for="genericLabel">Google Auth Json: </label>
+        <br>
+        <textarea id="jsonKey" style="width: 1200px; height: 400px; font-family: monospace;" autocomplete="off" id="edit" name="edit" class=" x-form-textarea x-form-field x-form-empty-field"></textarea>
+      </div>
+      </body>
+  </head>
+</html>
