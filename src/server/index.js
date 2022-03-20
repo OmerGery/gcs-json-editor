@@ -41,7 +41,7 @@ io.on('connection', (socket) => {
           bucketName,
           gcpProjectId : gcpProject,
         });
-        messageToClient = JSON.stringify(settingsToUpdate,null,2);
+        messageToClient = settingsToUpdate;
         
       } catch (e){
         messageToClient = `Error getting json from gcs: \n ${e.toString()}`;
