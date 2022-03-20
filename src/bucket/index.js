@@ -36,7 +36,7 @@ const getBucket = ({gcpProjectId, bucketName}) => {
         jsonBuffer += data;
       })
       .on('end', () => {
-        resolve(JSON.parse(jsonBuffer));
+        resolve(jsonBuffer);
       })
       .on('error', (e) => {
           console.error(e);
