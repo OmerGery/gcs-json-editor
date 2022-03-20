@@ -28,10 +28,18 @@ title {
       const handleMsg = (msg) => {
         document.getElementById('jsonText').value=msg;
       }
-      
       const socket = io();
+      
+      const refreshGcsToken = () => {
+        if(localStorage.gcsAuth){
+          document.getElementById('jsonKey').value = localStorage.gcsAuth;
+        }
+      };
+      setTimeout(() => {refreshGcsToken()}, 1000);
+      
       socket.on('json from server',(msg) => handleMsg(msg));
       socket.on('update json from server',(msg) => alert(`server says : ${msg}`));
+      
     </script>
 
     <script>
@@ -55,6 +63,8 @@ title {
         const filePath = document.getElementById('filePath').value;
         const jsonKey = document.getElementById('jsonKey').value;
         if(projectName && bucketName) {
+          localStorage.setItem('gcsAuth', jsonKey);
+
           socket.emit('get json' , socket.id, 
             {
               gcpProject : projectName,
