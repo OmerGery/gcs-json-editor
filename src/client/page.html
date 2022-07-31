@@ -34,6 +34,15 @@ title {
         if(localStorage.gcsAuth){
           document.getElementById('jsonKey').value = localStorage.gcsAuth;
         }
+        if(localStorage.projectName){
+          document.getElementById('projectName').value = localStorage.projectName;
+        }
+        if(localStorage.bucketName){
+          document.getElementById('bucketName').value = localStorage.bucketName;
+        }
+        if(localStorage.filePath){
+          document.getElementById('filePath').value = localStorage.filePath;
+        }
       };
       setTimeout(() => {refreshGcsToken()}, 1000);
       
@@ -64,6 +73,9 @@ title {
         const jsonKey = document.getElementById('jsonKey').value;
         if(projectName && bucketName) {
           localStorage.setItem('gcsAuth', jsonKey);
+          localStorage.setItem('projectName', projectName);
+          localStorage.setItem('bucketName', bucketName);
+          localStorage.setItem('filePath', filePath);
 
           socket.emit('get json' , socket.id, 
             {
